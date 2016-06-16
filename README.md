@@ -18,7 +18,7 @@ HOSTNAMES
     $weathermapper[$label]['search_opts'] = [];
     $weathermapper[$label]['search_opts']['types'] = ['hostname'];
     $weathermapper[$label]['search_opts']['hostnames'] = [];
-    $weathermapper[$label]['search_opts']['hsotnames'][] = [
+    $weathermapper[$label]['search_opts']['hostnames'][] = [
       'regex' => "myhost[0-9]+.*",
       'row' => 10
     ];
