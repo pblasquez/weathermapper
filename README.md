@@ -11,42 +11,42 @@ Examples are included in the conf.d directory. The comments may be a bit overwhe
 
 HOSTNAMES
 ---------
-$label = 'mylabel';
-$weathermapper[$label] = [];
-$weathermapper[$label]['title'] = "Network Map (".$label.")";
-$weathermapper[$label]['grid_opts'] = $grid_opts;
-$weathermapper[$label]['search_opts'] = [];
-$weathermapper[$label]['search_opts']['types'] = ['hostname'];
-$weathermapper[$label]['search_opts']['hostnames'] = [];
-$weathermapper[$label]['search_opts']['hsotnames'][] = [
-  'regex' => "myhost[0-9]+.*",
-  'row' => 10
-];
+    $label = 'mylabel';
+    $weathermapper[$label] = [];
+    $weathermapper[$label]['title'] = "Network Map (".$label.")";
+    $weathermapper[$label]['grid_opts'] = $grid_opts;
+    $weathermapper[$label]['search_opts'] = [];
+    $weathermapper[$label]['search_opts']['types'] = ['hostname'];
+    $weathermapper[$label]['search_opts']['hostnames'] = [];
+    $weathermapper[$label]['search_opts']['hsotnames'][] = [
+      'regex' => "myhost[0-9]+.*",
+      'row' => 10
+    ];
 
 GROUPS
 ------
-$label = 'mylabel';
-$weathermapper[$label] = [];
-$weathermapper[$label]['title'] = "Network Map (".$label.")";
-$weathermapper[$label]['grid_opts'] = $grid_opts;
-$weathermapper[$label]['search_opts'] = [];
-$weathermapper[$label]['search_opts']['types'] = ['group'];
-$weathermapper[$label]['search_opts']['groups'] = [];
-$weathermapper[$label]['search_opts']['groups'][] = [
-  'group' => 6,
-  'row' => 10
-];
+    $label = 'mylabel';
+    $weathermapper[$label] = [];
+    $weathermapper[$label]['title'] = "Network Map (".$label.")";
+    $weathermapper[$label]['grid_opts'] = $grid_opts;
+    $weathermapper[$label]['search_opts'] = [];
+    $weathermapper[$label]['search_opts']['types'] = ['group'];
+    $weathermapper[$label]['search_opts']['groups'] = [];
+    $weathermapper[$label]['search_opts']['groups'][] = [
+      'group' => 6,
+      'row' => 10
+    ];
 
 LOCATIONS
 ---------
-$label = 'DOTCLOUD-AZ1';
-$weathermapper[$label] = [];
-$weathermapper[$label]['title'] = "Network Map (".$label.")";
-$weathermapper[$label]['grid_opts'] = $grid_opts;
-$weathermapper[$label]['search_opts'] = [];
-$weathermapper[$label]['search_opts']['types'] = ['location'];
-$weathermapper[$label]['search_opts']['locations'] = [];
-$weathermapper[$label]['search_opts']['locations'][] = [
-  'regex' => "MYSITE[0-9}+",
-  'row' => 10
-];
+    $label = 'DOTCLOUD-AZ1';
+    $weathermapper[$label] = [];
+    $weathermapper[$label]['title'] = "Network Map (".$label.")";
+    $weathermapper[$label]['grid_opts'] = $grid_opts;
+    $weathermapper[$label]['search_opts'] = [];
+    $weathermapper[$label]['search_opts']['types'] = ['location'];
+    $weathermapper[$label]['search_opts']['locations'] = [];
+    $weathermapper[$label]['search_opts']['locations'][] = [
+      'regex' => "MYSITE[0-9}+",
+      'row' => 10
+    ];
