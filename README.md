@@ -36,7 +36,8 @@ $weathermapper[$label]['search_opts']['hostnames'] = [];
 $weathermapper[$label]['search_opts']['hostnames'][] = [
   'regex' => "myhost[0-9]+.*",
   'row' => 10
-];```
+];
+```
 
 GROUPS
 ------
@@ -51,7 +52,8 @@ $weathermapper[$label]['search_opts']['groups'] = [];
 $weathermapper[$label]['search_opts']['groups'][] = [
   'group' => 6,
   'row' => 10
-];```
+];
+```
 
 LOCATIONS
 ---------
@@ -66,7 +68,8 @@ $weathermapper[$label]['search_opts']['locations'] = [];
 $weathermapper[$label]['search_opts']['locations'][] = [
   'regex' => "MYSITE[0-9}+",
   'row' => 10
-];```
+];
+```
 
 [1]: https://github.com/librenms/librenms "LibreNMS GitHub repo"
 [2]: https://github.com/librenms-plugins/Weathermap "LibreNMS Weathermap Plugin Github repo"
