@@ -86,7 +86,7 @@ function get_device_list($dbh,$search_opts) {
             }
             foreach($device_list as $k2 => $v2) {
               if(preg_match('/'.$v['regex'].'/', $k2)) {
-                $matches = array_merge($matches, $v);
+                $matches = array_merge($matches, $v2);
               }
             }
 	    foreach($matches as $match) {
