@@ -3,8 +3,8 @@ Automatically generate weathermaps from a LibreNMS database
 
 Requirements
 ------------
-- A working LibreNMS[1] installation
-- A working LibreNMS-Weathermap Plugin[2]
+- A working [LibreNMS][1] installation
+- A working [LibreNMS-Weathermap Plugin][2]
 - PHP 5.4+
 
 Installation
