@@ -4,10 +4,11 @@
 
 //File label, must be unique across all maps
 $label = 'myuniquelabel';
-$weathermapper[$label] = [];
 
 // Uncomment to use the filename as the label
-//$label = str_replace('.php','',$argv[0]);
+//$label = str_replace('.php','',basename(__FILE__));
+
+$weathermapper[$label] = [];
 
 // HTML title, doesn't need to be unique
 $weathermapper[$label]['title'] = "Network Map (".$label.")";
@@ -35,7 +36,7 @@ $weathermapper[$label]['search_opts'] = [];
   //   hostname - regex match on hostnames
   //   group - exact match on group id
   //   location - regex match on location strings
-$weathermapper[$label]['search_opts']['types'] = ['hostname']
+$weathermapper[$label]['search_opts']['types'] = ['hostname'];
 
 $weathermapper[$label]['search_opts']['hostnames'] = [];
 $weathermapper[$label]['search_opts']['hostnames'][] = [
@@ -47,7 +48,6 @@ $weathermapper[$label]['search_opts']['hostnames'][] = [
   //        Linear: higher on the page
   //          Radial: closer to the center
   'row' => 10
-  ]
 ];
 
 // Add another row:
