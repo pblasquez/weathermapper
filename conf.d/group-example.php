@@ -18,8 +18,12 @@ $weathermapper[$label]['grid_opts'] = $grid_opts;
 
 // Redefine grid options by uncommenting individually below
 
-// linear or radial
-//$weathermapper[$label]['grid_opts']['layout'] = 'radial';
+// top, left, or radial
+//
+// top - Top to bottom orientation
+// left - Left to right orientation
+// radial - Circular orientation
+$weathermapper[$label]['grid_opts']['layout'] = 'radial';
 
 // LINEAR OPTIONS
 //$weathermapper[$label]['grid_opts']['colsize'] = 200; // horizontal pixels between devices

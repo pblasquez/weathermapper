@@ -106,33 +106,58 @@ function auto_node_layout($devices, $layout, $grid_opts, $width=1980, $height=10
   $grid_dict=[];
   ksort($layout, SORT_NUMERIC);
   switch($grid_opts['layout']) {
-    case 'linear':
-      $col=0;
-      $x = $grid_opts['colmargin'];
+    case 'top':
+      $y = $grid_opts['rowmargin'];
       foreach ($layout as $k => $v) {
-        $row=0;
-        $col++;
-        $y = $height/2 + $grid_opts['rowmargin']/2;
+        $col=0;
+	$x = $width/2 + $grid_opts['colmargin']/2;
+        $colcount=count($v);
+        if($colcount % 2 == 0) {
+          $justify=0;
+        } else {
+          $x -= $grid_opts['colsize']/2;
+          $justify=1;
+        }
+        foreach($v as $device) {
+          $col++;
+          $grid_dict[$device]['x'] = round($x);
+          $grid_dict[$device]['y'] = round($y);
+          if ($justify==0) {
+            $x -= $grid_opts['colsize'];
+            $justify=1;
+          } else {
+            $x += $justify * $col * $grid_opts['colsize'];
+            $justify *= -1;
+          }
+        }
+        $y += $grid_opts['rowsize'];
+      }
+      break;
+    case 'left':
+      $x = $grid_opts['rowmargin'];
+      foreach ($layout as $k => $v) {
+        $col=0; 
+	$y = $height/2 + $grid_opts['colmargin']/2;
         $rowcount=count($v);
         if($rowcount % 2 == 0) {
           $justify=0;
         } else {
-          $y -= $grid_opts['rowsize']/2;
+          $y -= $grid_opts['colsize']/2;
           $justify=1;
         }
         foreach($v as $device) {
-          $row++;
+          $col++;
           $grid_dict[$device]['x'] = round($x);
           $grid_dict[$device]['y'] = round($y);
           if ($justify==0) {
-            $y -= $grid_opts['rowsize'];
+            $y -= $grid_opts['colsize'];
             $justify=1;
           } else {
-            $y += $justify * $row * $grid_opts['rowsize'];
+            $y += $justify * $col * $grid_opts['colsize'];
             $justify *= -1;
           }
         }
-        $x += $grid_opts['colsize'];
+        $x += $grid_opts['rowsize'];
       }
       break;
     case 'radial':
@@ -172,9 +197,13 @@ function create_node_config($devices,$layout,$grid_opts,$title,$label,$map_dir,$
     if(count($v) > $max_row) { $max_row = count($v); }
   }
   switch($grid_opts['layout']) {
-    case 'linear' :
-      $height=($max_row-1) * $grid_opts['rowsize'] + ($grid_opts['rowmargin']);
-      $width=(count(array_unique(array_keys($layout)))-1) * $grid_opts['colsize'] + $grid_opts['colmargin'] * 2;
+    case 'top' :
+      $width=($max_row-1) * $grid_opts['colsize'] + ($grid_opts['colmargin']);
+      $height=(count(array_unique(array_keys($layout)))-1) * $grid_opts['rowsize'] + $grid_opts['rowmargin'] * 2;
+      break;
+    case 'left':
+      $width=(count(array_unique(array_keys($layout)))-1) * $grid_opts['rowsize'] + $grid_opts['rowmargin'] * 2;
+      $height=($max_row-1) * $grid_opts['colsize'] + ($grid_opts['colmargin']);
       break;
     case 'radial' :
       $height=count(array_unique(array_keys($layout)))*$grid_opts['radius'] * 2 + $grid_opts['radius']/2;
@@ -301,7 +330,10 @@ function create_link_config($links) {
 
 function shortname($hostname) {
   $subs = explode('.', $hostname);
-  $shortname = $subs[0].".".$subs[1];
+  $sub_count=count($subs);
+  $suffix = '.'.$subs[$sub_count-2].'.'.$subs[$sub_count-1];
+  $shortname = str_replace($suffix,'',$hostname);
+  
   return $shortname;
 }
 
