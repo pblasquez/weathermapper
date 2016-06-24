@@ -62,7 +62,7 @@ $weathermapper[$label]['search_opts']['groups'][] = [
 LOCATIONS
 ---------
 ```php
-$label = 'DOTCLOUD-AZ1';
+$label = 'mylabel';
 $weathermapper[$label] = [];
 $weathermapper[$label]['title'] = "Network Map (".$label.")";
 $weathermapper[$label]['grid_opts'] = $grid_opts;
