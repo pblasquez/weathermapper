@@ -15,6 +15,10 @@ Installation
 - Create a map file in conf.d using the examples provided
 - Run weathermapper.php: ```$ php weathermapper.php```
 
+Examples
+--------
+Examples can be found in the examples directory or viewed on the [wiki][3].
+
 Tips:
 ----
 - Play with the values in grid_opts to see the effects on the auto-layout.
@@ -73,3 +77,4 @@ $weathermapper[$label]['search_opts']['locations'][] = [
 
 [1]: https://github.com/librenms/librenms "LibreNMS GitHub repo"
 [2]: https://github.com/librenms-plugins/Weathermap "LibreNMS Weathermap Plugin Github repo"
+[3]: https://github.com/pblasquez/weathermapper/wiki
