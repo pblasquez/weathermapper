@@ -34,7 +34,8 @@ foreach ($weathermapper as $k => $v) {
     $links = get_link_matrix(
       $dbh,
       $devices,
-      $link_opts
+      $link_opts,
+      $match_iftypes
     );
 
     // Make sure links are found, otherwise warn

@@ -57,7 +57,21 @@ function get_device_list($dbh,$search_opts) {
         if (array_key_exists('groups',$search_opts)) {
           foreach($search_opts['groups'] as $k => $v) {
 	    $device_list=[];
-	    $sql = 'SELECT device_id, hostname FROM devices WHERE device_id in (SELECT DISTINCT device_id from device_group_device WHERE device_group_id=?)';
+	    $sql = '
+              SELECT
+                device_id,
+                hostname
+              FROM
+                devices
+              WHERE
+                device_id in (
+                  SELECT DISTINCT
+                    device_id
+                  FROM
+                    device_group_device
+                  WHERE
+                    device_group_id=?
+                )';
 	    $sth = $dbh->prepare($sql);
             $sth->bindParam(1, $v['group']);
             $sth->execute();
@@ -118,6 +132,7 @@ function auto_node_layout($devices, $layout, $grid_opts, $width=1980, $height=10
           $x -= $grid_opts['colsize']/2;
           $justify=1;
         }
+        natcasesort($v);
         foreach($v as $device) {
           $col++;
           $grid_dict[$device]['x'] = round($x);
@@ -145,6 +160,7 @@ function auto_node_layout($devices, $layout, $grid_opts, $width=1980, $height=10
           $y -= $grid_opts['colsize']/2;
           $justify=1;
         }
+        natcasesort($v);
         foreach($v as $device) {
           $col++;
           $grid_dict[$device]['x'] = round($x);
@@ -167,6 +183,7 @@ function auto_node_layout($devices, $layout, $grid_opts, $width=1980, $height=10
       foreach ($layout as $k => $v) {
         $points = count($v);
         $slice = 2*pi()/$points;
+        natcasesort($v);
         if($points >= 2) {
           $angle=0;
           foreach($v as $device) {
@@ -277,34 +294,98 @@ LINK DEFAULT
 }
 
 // Get LLDP link matrix from data source
-function get_link_matrix($dbh, $devices, $link_opts) {
+function get_link_matrix($dbh, $devices, $link_opts, $match_iftypes) {
   $in_list = implode("','", array_keys($devices));
   $in_list = "'".$in_list."'";
+  $id_list = implode(",", array_values($devices));
+  $iftype="";
+  if(is_array($match_iftypes)) {
+    $iftype = " AND p.ifType IN ('".implode("','", $match_iftypes)."')";
+    $iftype .= " AND p2.ifType IN ('".implode("','", $match_iftypes)."')";
+  }
   $links=[];
-  foreach ($devices as $device => $id) {
-    $sql = 'SELECT DISTINCT p.device_id as device_id, p.ifDescr as ifDescr, p.ifIndex as ifIndex, p.ifSpeed as ifSpeed, ';
-    $sql .= 'l.local_port_id as local_port_id, l.remote_port_id as remote_port_id, l.remote_port as remote_port, d.hostname as remote_hostname ';
-    $sql .= 'FROM links l, ports p, devices d, ports p2 WHERE p.device_id = ? AND l.local_port_id=p.port_id AND ';
-    $sql .= 'l.remote_port_id = p2.port_id AND p2.device_id=d.device_id AND ';
-    $sql .= 'd.hostname IN ('.$in_list.')';
-    $sth = $dbh->prepare($sql);
-    $sth->bindParam(1, $id);
-    $sth->execute();
-    $sth->setFetchMode(PDO::FETCH_ASSOC);
-    while($row = $sth->fetch()) {
-      #echo $device.":".str_replace(' ', '', $row['ifDescr'])."->".$row['remote_hostname'].":".str_replace(' ', '', $row['remote_port'])."\n";
-      if (empty($links[$row['remote_hostname']])) {
-        $links[$device][] = [
-          'device_id' => $row['device_id'],
-          'local_port' => str_replace(' ', '', $row['ifDescr']),
-          'local_ifIndex' => $row['ifIndex'],
-          'bandwidth' => format_bandwidth($row['ifSpeed']),
-          'local_port_id' => $row['local_port_id'],
-          'remote_hostname' => $row['remote_hostname'],
-          'remote_port' => str_replace(' ', '', $row['remote_port']),
-          'remote_port_id' => $row['remote_port_id'],
-        ];
-      }
+  // Get XDP links
+  $sql = "
+    SELECT
+      p.device_id as device_id,
+      p.ifDescr as ifDescr,
+      p.ifIndex as ifIndex,
+      p.ifSpeed as ifSpeed,
+      l.local_port_id as local_port_id,
+      l.remote_port_id as remote_port_id,
+      l.remote_port as remote_port,
+      d.hostname as local_hostname,
+      d2.hostname as remote_hostname 
+    FROM
+      links l
+      INNER JOIN ports p ON l.local_port_id=p.port_id
+      INNER JOIN ports p2 ON l.remote_port_id = p2.port_id
+      INNER JOIN devices d ON p.device_id=d.device_id
+      INNER JOIN devices d2 ON p2.device_id=d2.device_id
+    WHERE
+      p.device_id IN ($id_list)
+      AND d2.hostname IN ($in_list)
+      $iftype
+  ";
+  $sth = $dbh->prepare($sql);
+  //$sth->bindParam(1, $id_list);
+  $sth->execute();
+  $sth->setFetchMode(PDO::FETCH_ASSOC);
+  while($row = $sth->fetch()) {
+    $composite = $row['local_port_id'].':'.$row['remote_port_id'];
+    if (empty($links[$row['local_hostname']][$composite])) {
+      $links[$row['local_hostname']][$composite] = [
+        'device_id' => $row['device_id'],
+        'local_port' => str_replace(' ', '', $row['ifDescr']),
+        'local_ifIndex' => $row['ifIndex'],
+        'bandwidth' => format_bandwidth($row['ifSpeed']),
+        'local_port_id' => $row['local_port_id'],
+        'remote_hostname' => $row['remote_hostname'],
+        'remote_port' => str_replace(' ', '', $row['remote_port']),
+        'remote_port_id' => $row['remote_port_id'],
+      ];
+    }
+  }
+  // Get MAC links
+  $sql = "
+    SELECT
+      p.device_id as device_id,
+      p.ifDescr as ifDescr,
+      p.ifIndex as ifIndex,
+      p.ifSpeed as ifSpeed,
+      m.port_id as local_port_id,
+      p2.port_id as remote_port_id,
+      p2.ifDescr as remote_port,
+      d.hostname as remote_hostname 
+    FROM
+      ipv4_mac m
+      INNER JOIN ports p ON m.port_id=p.port_id
+      INNER JOIN ports p2 ON m.mac_address = p2.ifPhysAddress
+      INNER JOIN devices d ON p.device_id=d.device_id
+      INNER JOIN devices d2 ON p2.device_id=d2.device_id
+    WHERE
+      m.mac_address NOT IN ('000000000000','ffffffffffff')
+      AND p.device_id IN ($id_list)
+      AND d2.hostname IN ($in_list)
+      $iftype
+  ";
+  $sth = $dbh->prepare($sql);
+  //$sth->bindParam(1, $in_list);
+  $sth->execute();
+  $sth->setFetchMode(PDO::FETCH_ASSOC);
+  while($row = $sth->fetch()) {
+    $composite = $row['local_port_id'].':'.$row['remote_port_id'];
+    if (empty($links[$row['local_hostname']][$composite])) {
+      $links[$row['local_hostname']][$composite] = [
+        'device_id' => $row['device_id'],
+        'local_port' => str_replace(' ', '', $row['ifDescr']),
+        'local_ifIndex' => $row['ifIndex'],
+        'bandwidth' => format_bandwidth($row['ifSpeed']),
+        'local_port_id' => $row['local_port_id'],
+        'remote_hostname' => $row['remote_hostname'],
+        'remote_port' => str_replace(' ', '', $row['remote_port']),
+        'remote_port_id' => $row['remote_port_id'],
+      ];
     }
   }
   return $links;

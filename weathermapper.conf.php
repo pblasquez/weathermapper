@@ -57,6 +57,9 @@ $grid_opts =  [
   'radius' => 400 // pixels between radial sets
 ];
 
+// ifTypes to allow (can be overriden in conf.d)
+$match_iftypes = ['ethernetCsmacd','ieee8023adLag','pppMultilinkBundle','gigabitEthernet'];
+
 // Load conf.d files
 if (is_dir($weathermapper_dir.'/conf.d')) {
   foreach (glob($weathermapper_dir.'/conf.d/*.php') as $inc) {
