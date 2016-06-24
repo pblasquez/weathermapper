@@ -326,28 +326,7 @@ function get_link_matrix($dbh, $devices, $link_opts, $match_iftypes) {
       p.device_id IN ($id_list)
       AND d2.hostname IN ($in_list)
       $iftype
-  ";
-  $sth = $dbh->prepare($sql);
-  //$sth->bindParam(1, $id_list);
-  $sth->execute();
-  $sth->setFetchMode(PDO::FETCH_ASSOC);
-  while($row = $sth->fetch()) {
-    $composite = $row['local_port_id'].':'.$row['remote_port_id'];
-    if (empty($links[$row['local_hostname']][$composite])) {
-      $links[$row['local_hostname']][$composite] = [
-        'device_id' => $row['device_id'],
-        'local_port' => str_replace(' ', '', $row['ifDescr']),
-        'local_ifIndex' => $row['ifIndex'],
-        'bandwidth' => format_bandwidth($row['ifSpeed']),
-        'local_port_id' => $row['local_port_id'],
-        'remote_hostname' => $row['remote_hostname'],
-        'remote_port' => str_replace(' ', '', $row['remote_port']),
-        'remote_port_id' => $row['remote_port_id'],
-      ];
-    }
-  }
-  // Get MAC links
-  $sql = "
+    UNION
     SELECT
       p.device_id as device_id,
       p.ifDescr as ifDescr,
@@ -356,7 +335,8 @@ function get_link_matrix($dbh, $devices, $link_opts, $match_iftypes) {
       m.port_id as local_port_id,
       p2.port_id as remote_port_id,
       p2.ifDescr as remote_port,
-      d.hostname as remote_hostname 
+      d.hostname as local_hostname,
+      d2.hostname as remote_hostname 
     FROM
       ipv4_mac m
       INNER JOIN ports p ON m.port_id=p.port_id
