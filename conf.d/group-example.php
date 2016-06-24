@@ -25,7 +25,7 @@ $weathermapper[$label]['grid_opts'] = $grid_opts;
 // radial - Circular orientation
 $weathermapper[$label]['grid_opts']['layout'] = 'radial';
 
-// LINEAR OPTIONS
+// TOP/LEFT OPTIONS
 //$weathermapper[$label]['grid_opts']['colsize'] = 200; // horizontal pixels between devices
 //$weathermapper[$label]['grid_opts']['colmargin'] = 100; // horizontal pixels from edge of canvas
 //$weathermapper[$label]['grid_opts']['rowsize'] = 100; // vertical pixels between devices
@@ -48,9 +48,11 @@ $weathermapper[$label]['search_opts']['groups'][] = [
   'group' => 1,
 
   // Row: Defines the order in which this grouping of devices is displayed
-  //      Lower number means
-  //        Linear: higher on the page
-  //          Radial: closer to the center
+  // Lower number means:
+  //   Top: higher on the page
+  //   Left: more to the left of the page
+  //   Radial: closer to the center
+
   'row' => 10
 ];
 
