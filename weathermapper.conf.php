@@ -66,5 +66,3 @@ if (is_dir($weathermapper_dir.'/conf.d')) {
     include($inc);
   }
 }
-
-?>

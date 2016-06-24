@@ -413,5 +413,3 @@ function format_bandwidth($speed) {
   }
   return $bandwidth;
 }
-
-?>

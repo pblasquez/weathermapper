@@ -60,4 +60,3 @@ $weathermapper[$label]['search_opts']['locations'][] = [
   'row' => 20
 ];
 */
-?>
