@@ -44,10 +44,14 @@ require_once($weathermapper_dir.'/includes/weathermapper.inc.php');
 // These options will be used unless you specify new ones
 
 $grid_opts =  [
-  //linear or radial
+  // top, left, or radial
+  //
+  // top - Top to bottom orientation
+  // left - Left to right orientation
+  // radial - Circular orientation
   'layout' => 'radial',
 
-  // Only used for linear layouts
+  // Only used for top/left layouts
   'colsize' => 200, // horizontal pixels between devices
   'colmargin' => 100, // horizontal pixels from edge of canvas
   'rowsize' => 100, // vertical pixels between devices
