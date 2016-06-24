@@ -76,6 +76,7 @@ function get_device_list($dbh,$search_opts) {
             $sth->bindParam(1, $v['group']);
             $sth->execute();
 	    $sth->setFetchMode(PDO::FETCH_ASSOC);
+            $matches=[];
 	    while($row = $sth->fetch()) {
               $matches[] = $row['hostname'];
               $device_arr[$row['hostname']] = $row['device_id'];
