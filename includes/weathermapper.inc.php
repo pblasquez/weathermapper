@@ -253,6 +253,7 @@ KEYBGCOLOR 255 255 255
 BGCOLOR 255 255 255
 TITLECOLOR 0 0 0
 TIMECOLOR 0 0 0
+SCALE DEFAULT 0    0    211 211 211
 SCALE DEFAULT 0    1    135 206 250
 SCALE DEFAULT 1    10     0   0 255
 SCALE DEFAULT 10   40    34 139  34
@@ -372,8 +373,16 @@ function get_link_matrix($dbh, $devices, $link_opts, $match_iftypes) {
   return $links;
 }
 
-function create_link_config($links) {
+function create_link_config($links,$rrdcached,$rrdcached_dir) {
   $config = "# regular LINKs:\n";
+  $prefix = '../../../rrd';
+  if(!empty($rrdcached)) {
+    if ($rrdcached_dir=='#') {
+      $prefix = '.';
+    } else {
+      $prefix = $rrdcached_dir;
+    }
+  }
   foreach ($links as $k => $a) {
     $shortname = shortname($k);
     foreach ($a as $i => $v) {
@@ -381,7 +390,7 @@ function create_link_config($links) {
       $config .= "LINK ".$shortname.":".$v['local_port']."-".$remote_shortname.":".$v['remote_port']."\n";
       $config .= "     INFOURL /graphs/type=port_bits/id=".$v['local_port_id']."/\n";
       $config .= "     OVERLIBGRAPH /graph.php?height=100&width=512&id=".$v['local_port_id']."&type=port_bits&legend=no\n";
-      $config .= "     TARGET ../../rrd/".$k."/port-".$v['local_ifIndex'].".rrd:INOCTETS:OUTOCTETS\n";
+      $config .= "     TARGET ".$prefix."/".$k."/port-id".$v['local_port_id'].".rrd:INOCTETS:OUTOCTETS\n";
       $config .= "     NODES ".$shortname." ".$remote_shortname."\n";
       $config .= "     BANDWIDTH ".$v['bandwidth']."\n";
       $config .= "\n";
