@@ -373,16 +373,8 @@ function get_link_matrix($dbh, $devices, $link_opts, $match_iftypes) {
   return $links;
 }
 
-function create_link_config($links,$rrdcached,$rrdcached_dir) {
+function create_link_config($links, $prefix = '.') {
   $config = "# regular LINKs:\n";
-  $prefix = '../../../rrd';
-  if(!empty($rrdcached)) {
-    if ($rrdcached_dir=='#') {
-      $prefix = '.';
-    } else {
-      $prefix = $rrdcached_dir;
-    }
-  }
   foreach ($links as $k => $a) {
     $shortname = shortname($k);
     foreach ($a as $i => $v) {
@@ -400,6 +392,9 @@ function create_link_config($links,$rrdcached,$rrdcached_dir) {
 }
 
 function shortname($hostname) {
+  if (filter_var($hostname, FILTER_VALIDATE_IP)) {
+    return $hostname;
+  }
   $subs = explode('.', $hostname);
   $sub_count=count($subs);
   $suffix = '.'.$subs[$sub_count-2].'.'.$subs[$sub_count-1];

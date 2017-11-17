@@ -58,7 +58,7 @@ foreach ($weathermapper as $k => $v) {
     );
 
     // Concatenate link configs
-    $config .= create_link_config($links,$config['rrdcached'],$config['rrdcached_dir']);
+    $config .= create_link_config($links,$config['rrdcached_dir']);
 
     // Write to file
     $file = $output_dir."/".$k.".conf";
