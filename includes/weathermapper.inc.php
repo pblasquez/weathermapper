@@ -397,10 +397,13 @@ function shortname($hostname) {
   }
   $subs = explode('.', $hostname);
   $sub_count=count($subs);
-  $suffix = '.'.$subs[$sub_count-2].'.'.$subs[$sub_count-1];
-  $shortname = str_replace($suffix,'',$hostname);
+  if ($sub_count >= 3) {
+    $suffix = '.'.$subs[$sub_count-2].'.'.$subs[$sub_count-1];
+    $shortname = str_replace($suffix,'',$hostname);
+    return $shortname;
+  }
+  return $hostname;
   
-  return $shortname;
 }
 
 function format_bandwidth($speed) {

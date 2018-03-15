@@ -47,7 +47,7 @@ foreach ($weathermapper as $k => $v) {
     }
 
     // Automatically create config file starting with header and nodes
-    $config = create_node_config(
+    $map_config = create_node_config(
       $devices,
       $layout,
       $v['grid_opts'],
@@ -58,12 +58,16 @@ foreach ($weathermapper as $k => $v) {
     );
 
     // Concatenate link configs
-    $config .= create_link_config($links,$config['rrd_dir']);
+    $map_rrd_dir = '.';
+    if(!empty($config['rrd_dir'])) {
+      $map_rrd_dir = $config['rrd_dir'];
+    }
+    $map_config .= create_link_config($links,$map_rrd_dir);
 
     // Write to file
     $file = $output_dir."/".$k.".conf";
     $fh = fopen($file, "w") or die("Unable to open ".$file."!");
-    fwrite($fh,$config);
+    fwrite($fh,$map_config);
     fclose($fh);
 }
 // Close DB connection
