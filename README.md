@@ -12,12 +12,12 @@ Installation
 - Clone to a directory such as /opt/weathermapper:
 - ```cd /opt; git clone https://github.com/pblasquez/weathermapper.git```
 - Verify settings are correct in weathermapper.conf.php
-- Create a map file in conf.d using the examples provided
+- Create a map file in conf.d using the examples provided within that directory (you will need to provide data from your environment)
 - Run weathermapper.php: ```$ php weathermapper.php```
 
 Examples
 --------
-Examples can be found in the examples directory or viewed on the [wiki][3].
+Examples of map designs created can be found in the examples directory or viewed on the [wiki][3].
 
 Tips:
 ----
