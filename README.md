@@ -15,6 +15,17 @@ Installation
 - Create a map file in conf.d using the examples provided within that directory (you will need to provide data from your environment)
 - Run weathermapper.php: ```$ php weathermapper.php```
 
+Optional: LibreNMS Plugin
+------------
+Assuming you have installed both weathermapper and librenms in /opt:
+- ```cp -R /opt/weathermapper/librenms_plugin/Weathermapper /opt/librenms/html/plugins/```
+- Make sure this directory is owned by the webserver user
+- Go to your LibreNMS web UI -> Overview -> Plugins -> Plugin Admin
+- Click Enable for Weathermapper
+- Go to Overview -> Plugins -> Weathermapper
+- Fill out form and submit (Create Weathermap)
+- Run weathermapper.php: ```$ php weathermapper.php```
+
 Examples
 --------
 Examples of map designs created can be found in the examples directory or viewed on the [wiki][3].
