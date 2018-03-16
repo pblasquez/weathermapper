@@ -216,7 +216,7 @@ function create_node_config($devices,$layout,$grid_opts,$title,$label,$map_dir,$
   }
   switch($grid_opts['layout']) {
     case 'top' :
-      $width=($max_row-1) * $grid_opts['colsize'] + ($grid_opts['colmargin']);
+      $width=($max_row-1) * $grid_opts['colsize'] + ($grid_opts['colmargin']*2);
       $height=(count(array_unique(array_keys($layout)))-1) * $grid_opts['rowsize'] + $grid_opts['rowmargin'] * 2;
       break;
     case 'left':
