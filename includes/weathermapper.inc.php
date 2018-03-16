@@ -221,7 +221,7 @@ function create_node_config($devices,$layout,$grid_opts,$title,$label,$map_dir,$
       break;
     case 'left':
       $width=(count(array_unique(array_keys($layout)))-1) * $grid_opts['rowsize'] + $grid_opts['rowmargin'] * 2;
-      $height=($max_row-1) * $grid_opts['colsize'] + ($grid_opts['colmargin']);
+      $height=($max_row-1) * $grid_opts['colsize'] + ($grid_opts['colmargin']*2);
       break;
     case 'radial' :
       $height=count(array_unique(array_keys($layout)))*$grid_opts['radius'] * 2 + $grid_opts['radius']/2;
