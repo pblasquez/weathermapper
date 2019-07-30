@@ -87,12 +87,11 @@ function get_device_list($dbh,$search_opts) {
 	    }
           }
         }
-      // UNTESTED!
       case 'location':
         if (array_key_exists('locations',$search_opts)) {
           foreach($search_opts['locations'] as $k => $v) {
             $device_list=[];
-            $sql = 'SELECT device_id, hostname, location FROM devices';
+            $sql = 'SELECT devices.device_id, devices.hostname, locations.location FROM devices LEFT JOIN locations ON devices.location_id = locations.id';
             $sth = $dbh->query($sql);
             $sth->setFetchMode(PDO::FETCH_ASSOC);
             while($row = $sth->fetch()) {
