@@ -62,7 +62,7 @@ $weathermapper[$label]['search_opts']['types'] = [];
 EOT;
   $body .= '$weathermapper[$label][\'grid_opts\'][\'layout\'] = \''.$_GET['design']."';
 ";
-  if ($_GET['dev_select'] == 'radial') {
+  if (!empty($_GET['radius'])) {
     $body .= '$weathermapper[$label][\'grid_opts\'][\'radius\'] = '.$_GET['radius'].';
 ';
   } else {
