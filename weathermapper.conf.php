@@ -35,7 +35,7 @@ $router_image = 'images/Router.png';
 // Weathermapper section
 
 // Weathermapper base directory
-$weathermapper_dir = dirname($argv[0]); 
+$weathermapper_dir = __DIR__; 
 
 // Weathermapper library
 require_once($weathermapper_dir.'/includes/weathermapper.inc.php');
