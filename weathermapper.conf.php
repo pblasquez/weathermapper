@@ -13,11 +13,31 @@
 
 // LibreNMS Section
 
-// LibreNMS directory
+/// LibreNMS directory
 $install_dir = '/opt/librenms';
 
 // LibreNMS config
 require_once($install_dir.'/config.php');
+
+// LibreNMS load .env file
+$env_file = $install_dir.'/.env';
+if (is_file($env_file)) {
+    $file = new \SplFileObject($env_file);
+
+    // Loop until we reach the end of the file.
+    while (false === $file->eof()) {
+        // Get the current line value, trim it and save by putenv.
+        $line = $file->fgets();
+        if (str_contains($line, '=')) {
+            putenv(trim($line));
+        }
+    }
+}
+
+$config['db_host'] = getenv('DB_HOST');
+$config['db_name'] = getenv('DB_DATABASE');
+$config['db_user'] = getenv('DB_USERNAME');
+$config['db_pass'] = getenv('DB_PASSWORD');
 
 // LibreNMS Weathermap plugin directory
 $weathermap_dir  = $install_dir.'/html/plugins/Weathermap';
